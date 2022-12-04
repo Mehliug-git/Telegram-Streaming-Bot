@@ -15,8 +15,7 @@ from telegram.ext.commandhandler import CommandHandler
 from telegram.ext.messagehandler import MessageHandler
 from telegram.ext.filters import Filters
 
-updater = Updater("5852426917:AAHN44J2J_0sKRqmqde08qM34SC7n340pjI",
-                  use_context=True)#Telegram token
+updater = Updater("5852426917:AAHN44J2J_0sKRqmqde08qM34SC7n340pjI",use_context=True)#Telegram token
 token = str("5852426917:AAHN44J2J_0sKRqmqde08qM34SC7n340pjI")
 
 
