@@ -8,7 +8,6 @@ pip install python-telegram-bot
 """
 import os
 import requests
-import sys
 from telegram.ext.updater import Updater
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
