@@ -4,6 +4,9 @@ SOURCE : https://www.geeksforgeeks.org/create-a-telegram-bot-using-python/
 install pip :
 pip install python-telegram-bot
 
+TODO: 
+
+-Avec une commande /search il trouve des sites de streaming vf dispo 
 
 """
 import os
