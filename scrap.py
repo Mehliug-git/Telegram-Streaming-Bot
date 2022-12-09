@@ -22,4 +22,4 @@ for i in URL:
         links = list(filter(lambda x: re.search(__, x), url_list))
 
     print(f'LA PTN DE LIST DURL DE SES MORTS :\n\n\n {links}')
-print(f'SITE : {page.url} \n {page}')
+    print(f'SITE : {page.url} \n {page}')

@@ -17,6 +17,10 @@ from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
 from telegram.ext.messagehandler import MessageHandler
 from telegram.ext.filters import Filters
+from bs4 import BeautifulSoup
+import requests
+import re   
+
 
 updater = Updater("5852426917:AAHN44J2J_0sKRqmqde08qM34SC7n340pjI",use_context=True)#Telegram token
 token = str("5852426917:AAHN44J2J_0sKRqmqde08qM34SC7n340pjI")
@@ -54,13 +58,27 @@ def qrcode(update: Update, context: CallbackContext):
 
 
 def moviesearch(update: Update, context: CallbackContext):
-    film = update.message.text.replace('/search', '')
-    data = film.lower()
-    data = data.replace(' ', '%20')
-    urls = ("https://www.cpasmieux.eu/search/")#url de recherche
+    URL = ["https://www.megastream.lol/index.php", "https://www.cpasmieux.run/index.php", "https://wiflix.studio/"]
+    film = update.message.text.replace('/search', '')#User input - /search
+    search_lower = film.lower()
 
-    req = requests.post(str(urls) + data)
-    print(req.text)
+
+    search = search_lower.replace(' ', '+')#POST Payload convert
+    str_search = str(search)
+    data = {"do":"search", "subaction":"search", "story": {search}}
+
+    result = search_lower.split()#fait une liste avec le nom du film si plusieurs mots pour chercher dans les URL
+
+
+    for i in URL:
+        page = requests.post(i, data=data)
+        soup = BeautifulSoup(page.content, 'html.parser').find_all(lambda t: t.name == "a")
+        url_list = [a["href"] for a in soup]#https://stackoverflow.com/questions/65168254/how-to-get-href-link-by-text-in-python
+        for __ in result:
+            links = list(filter(lambda x: re.search(__, x), url_list))
+
+        print(f'LA PTN DE LIST DURL DE SES MORTS :\n\n\n {links}')
+        print(f'SITE : {page.url} \n {page}')
 
 
 
