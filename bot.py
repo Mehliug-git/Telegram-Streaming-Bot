@@ -7,6 +7,7 @@ pip install python-telegram-bot
 TODO: 
 
 -Avec une commande /search il trouve des sites de streaming vf dispo 
+-Dire le nb de site OK dans la liste 
 
 """
 import os
@@ -58,13 +59,14 @@ def qrcode(update: Update, context: CallbackContext):
 
 
 def moviesearch(update: Update, context: CallbackContext):
-    URL = ["https://www.megastream.lol/index.php", "https://www.cpasmieux.run/index.php", "https://wiflix.studio/"]
+    URL = ["https://www.megastream.lol/index.php", "https://www.cpasmieux.run/index.php", "https://wwvv.cpasmieux.one/", "https://www.cpasmieux.win/", "https://cpasmieux.ink/", "https://cpasmieux.cc/" ]
     film = update.message.text.replace('/search', '')#User input - /search
+    update.message.reply_text(f"Azy attend je cherche")
     search_lower = film.lower()
 
 
     search = search_lower.replace(' ', '+')#POST Payload convert
-    str_search = str(search)
+    #str_search = str(search)
     data = {"do":"search", "subaction":"search", "story": {search}}
 
     result = search_lower.split()#fait une liste avec le nom du film si plusieurs mots pour chercher dans les URL
@@ -77,8 +79,10 @@ def moviesearch(update: Update, context: CallbackContext):
         for __ in result:
             links = list(filter(lambda x: re.search(__, x), url_list))
 
-        print(f'LA PTN DE LIST DURL DE SES MORTS :\n\n\n {links}')
-        print(f'SITE : {page.url} \n {page}')
+        #print(f'LA PTN DE LIST DURL DE SES MORTS :\n\n\n {links}')
+        update.message.reply_text(f"Voici ce que j'ai trouvé : \n{links}\n Status de la request : {page}")
+        #print(f'SITE : {page.url} \n {page}')
+        
 
 
 
