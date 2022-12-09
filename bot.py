@@ -51,7 +51,19 @@ def qrcode(update: Update, context: CallbackContext):
             os.remove('TEMP.png')
     get_qrcode()
 
-    
+
+
+def moviesearch(update: Update, context: CallbackContext):
+    film = update.message.text.replace('/search', '')
+    data = film.lower()
+    data = data.replace(' ', '%20')
+    urls = ("https://www.cpasmieux.eu/search/")#url de recherche
+
+    req = requests.post(str(urls) + data)
+    print(req.text)
+
+
+
 
 
 def help(update: Update, context: CallbackContext):
@@ -68,6 +80,8 @@ def unknown(update: Update, context: CallbackContext):
 updater.dispatcher.add_handler(CommandHandler('start', start))
 
 updater.dispatcher.add_handler(CommandHandler('help', help))
+
+updater.dispatcher.add_handler(CommandHandler('search', moviesearch))
 
 updater.dispatcher.add_handler(CommandHandler('qrcode', qrcode))
 
