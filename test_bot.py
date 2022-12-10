@@ -8,6 +8,7 @@ pip install python-telegram-bot
 TODO: 
 
 -Dire le nb de site OK dans la liste 
+-Faire un filtre du user_input pour enelever les mots de liaisons et les accents
 
 """
 import os
@@ -64,7 +65,6 @@ def moviesearch(update: Update, context: CallbackContext):#STREAMING function
     update.message.reply_text(f"Attend je vais chercher ça ! 🔎")
     search_lower = film.lower()
     search = search_lower.replace(' ', '+')#POST Payload convert
-    #str_search = str(search)
     data = {"do":"search", "subaction":"search", "story": {search}}
 
     result = search_lower.split()#fait une liste avec le nom du film si plusieurs mots pour chercher dans les URL
