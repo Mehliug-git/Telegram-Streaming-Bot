@@ -1,1 +1,0 @@
-<a href="/" title="MegaStream"> <img alt="MegaStream" class="logotype-img" height="43" src="/templates/megastream/images/logotype/logotype_b_vert.png" width="194"/> </a>
