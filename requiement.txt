@@ -1,0 +1,5 @@
+Image
+BeautifulSoup4
+python-telegram-bot
+qrcode
+requests
