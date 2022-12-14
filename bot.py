@@ -20,7 +20,6 @@ from telegram.ext.commandhandler import CommandHandler
 from telegram.ext.messagehandler import MessageHandler
 from telegram.ext.filters import Filters
 from bs4 import BeautifulSoup
-import requests
 import re   
 
 #Telegram token
