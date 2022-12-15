@@ -14,7 +14,6 @@ TODO:
 import os
 import requests
 import telegram
-import runpy #for exec python script
 from telegram.ext.updater import Updater
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
@@ -30,7 +29,6 @@ import re
 #Telegram token
 updater = Updater("5861522005:AAGVYNFK_t7gZGaVz9XRhNpB_oVh1Zfe6Bk",use_context=True)
 token = str("5861522005:AAGVYNFK_t7gZGaVz9XRhNpB_oVh1Zfe6Bk")
-
 
 
 #def des fonctions du bot
@@ -50,6 +48,7 @@ def qrcode(update: Update, context: CallbackContext):
     global link
     link = update.message.text.replace('/qrcode', '')
     def get_qrcode():
+            global chat_id
             chat_id = str(update.effective_user.id)
             qr()
             path = 'TEMP.png'
@@ -95,6 +94,8 @@ def main_menu(update,context):
 
     update.message.reply_text(main_menu_message(),
                               reply_markup=main_menu_keyboard())
+    global chat_id_remind
+    chat_id_remind = str(update.effective_user.id)
 
 #def du clavier
 def main_menu_keyboard():
@@ -107,38 +108,34 @@ def main_menu_keyboard():
 def main_menu_message():
   return 'Dans combien de temps ? :'
 
-def remind(update: Update, context: CallbackContext):
-    global text
-    def chatid():
-        global chat_id
-        chat_id = str(update.effective_user.id)
-    chatid()
-    text = str(reminder_input)
-    print("qds")
-    local_time = float(time)
-    local_time = local_time * 60
-    #time.sleep(local_time)
-    message = ('https://api.telegram.org/bot'+ token + '/sendPhoto?chat_id=' + chat_id)
-    requests.post(message, data = "sqdsqdqsdsqdsqd")
 
 def m1():
-    global time
-    time = 5
+    global wait
+    wait = 5
     remind()
 def m2():
-    global time
-    time = 10
+    global wait
+    wait = 10
     remind()
 def m3():
-    global time
-    time = 15
+    global wait
+    wait = 15
     remind()
+
+def remind():
+    import time
+    global text
+    text = str(reminder_input)
+    local_time = wait * 60
+    time.sleep(local_time)
+    message = ('https://api.telegram.org/bot'+ token + '/sendMessage?chat_id=' + chat_id_remind + '&text=' + text)
+    requests.post(message)
 #Fin reminder app
 
 
 
 def help(update: Update, context: CallbackContext):
-    update.message.reply_text("/link : Permet d'avoir le lien du bot. \n\n/qrcode [Ce que tu veux] : Pour faire un QRCode sur ce que tu veux. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\nNOTE : Stp évite de mettre des mots de liaisons de type (et, le, du...) car ca peux te donner des résultats non attendu.")
+    update.message.reply_text("/link : Permet d'avoir le lien du bot. \n\n/qrcode [Ce que tu veux] : Pour faire un QRCode sur ce que tu veux. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\nNOTE : Stp évite de mettre des mots de liaisons de type (et, le, du...) car ca peux te donner des résultats non attendu.\n\n/r [Ce que tu veux qu'il te rapelle]")
 
 def unknown(update: Update, context: CallbackContext):
     update.message.reply_text("Mais qu'est ce qu'elle raconte la pute à crack ?!\n Va voir dans /help !")
