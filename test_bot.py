@@ -13,12 +13,9 @@ TODO:
 """
 import os
 import requests
-import telegram
-from telegram.ext.updater import Updater
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, run_async
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
-from telegram.ext.commandhandler import CommandHandler
-from telegram.ext.messagehandler import MessageHandler
 from telegram.ext import CommandHandler, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext.filters import Filters
@@ -29,7 +26,6 @@ import re
 #Telegram token
 updater = Updater("5861522005:AAGVYNFK_t7gZGaVz9XRhNpB_oVh1Zfe6Bk",use_context=True)
 token = str("5861522005:AAGVYNFK_t7gZGaVz9XRhNpB_oVh1Zfe6Bk")
-
 
 #def des fonctions du bot
 
@@ -101,7 +97,10 @@ def main_menu(update,context):
 def main_menu_keyboard():
   keyboard = [[InlineKeyboardButton('5 mins', callback_data='m1')],
               [InlineKeyboardButton('10 mins', callback_data='m2')],
-              [InlineKeyboardButton('15 mins', callback_data='m3')]]
+              [InlineKeyboardButton('15 mins', callback_data='m3')],
+              [InlineKeyboardButton('30 mins', callback_data='m4')],
+              [InlineKeyboardButton('45 mins', callback_data='m5')],
+              [InlineKeyboardButton('1H', callback_data='m6')]]
   return InlineKeyboardMarkup(keyboard)
 
 #message du menu
@@ -109,23 +108,61 @@ def main_menu_message():
   return 'Dans combien de temps ? :'
 
 
-def m1():
+def m1(update: Update, context: CallbackContext):
     global wait
     wait = 5
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
     remind()
-def m2():
+
+def m2(update: Update, context: CallbackContext):
     global wait
     wait = 10
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
     remind()
-def m3():
+
+def m3(update: Update, context: CallbackContext):
     global wait
     wait = 15
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
     remind()
+
+def m4(update: Update, context: CallbackContext):
+    global wait
+    wait = 30
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
+    remind()
+
+def m5(update: Update, context: CallbackContext):
+    global wait
+    wait = 45
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
+    remind()
+
+def m6(update: Update, context: CallbackContext):
+    global wait
+    wait = 60
+    print("TEST 1H")
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
+    remind()
+
 
 def remind():
     import time
     global text
     text = str(reminder_input)
+    print(f'Le message de remind est : {text}')
     local_time = wait * 60
     time.sleep(local_time)
     message = ('https://api.telegram.org/bot'+ token + '/sendMessage?chat_id=' + chat_id_remind + '&text=' + text)
@@ -138,19 +175,11 @@ def help(update: Update, context: CallbackContext):
     update.message.reply_text("/link : Permet d'avoir le lien du bot. \n\n/qrcode [Ce que tu veux] : Pour faire un QRCode sur ce que tu veux. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\nNOTE : Stp évite de mettre des mots de liaisons de type (et, le, du...) car ca peux te donner des résultats non attendu.\n\n/r [Ce que tu veux qu'il te rapelle]")
 
 def unknown(update: Update, context: CallbackContext):
-    update.message.reply_text("Mais qu'est ce qu'elle raconte la pute à crack ?!\n Va voir dans /help !")
+    update.message.reply_text("https://giphy.com/gifs/mrw-coffee-wants-tvGOBZKNEX0ac")
 
 
 def telegram_link(update: Update, context: CallbackContext):
     update.message.reply_text("t.me/Mehliug_bot")
-
-
-def first_menu(update,context):
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(
-                            text='Ok c\'est fait !')
-    m1()
 
 
 #Trigger des fonctions
@@ -166,7 +195,12 @@ updater.dispatcher.add_handler(CommandHandler('search', moviesearch))
 updater.dispatcher.add_handler(CommandHandler('qrcode', qrcode))
 
 updater.dispatcher.add_handler(CommandHandler('r', main_menu))
-updater.dispatcher.add_handler(CallbackQueryHandler(first_menu, pattern='m1'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m1, pattern='m1'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m2, pattern='m2'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m3, pattern='m3'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m4, pattern='m4'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m5, pattern='m5'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m6, pattern='m6'))
 
 updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 

@@ -9,6 +9,7 @@ TODO:
 
 -Dire le nb de site OK dans la liste 
 -Faire un filtre du user_input pour enelever les mots de liaisons et les accents
+-Changer le msg d'erreur par un GIF de mec qui cherche (tu vois de quoi je parle chakal)
 
 """
 import os
