@@ -101,7 +101,10 @@ def main_menu(update,context):
 def main_menu_keyboard():
   keyboard = [[InlineKeyboardButton('5 mins', callback_data='m1')],
               [InlineKeyboardButton('10 mins', callback_data='m2')],
-              [InlineKeyboardButton('15 mins', callback_data='m3')]]
+              [InlineKeyboardButton('15 mins', callback_data='m3')],
+              [InlineKeyboardButton('30 mins', callback_data='m4')],
+              [InlineKeyboardButton('45 mins', callback_data='m5')],
+              [InlineKeyboardButton('1H', callback_data='m6')]]
   return InlineKeyboardMarkup(keyboard)
 
 #message du menu
@@ -109,23 +112,61 @@ def main_menu_message():
   return 'Dans combien de temps ? :'
 
 
-def m1():
+def m1(update: Update, context: CallbackContext):
     global wait
     wait = 5
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
     remind()
-def m2():
+
+def m2(update: Update, context: CallbackContext):
     global wait
     wait = 10
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
     remind()
-def m3():
+
+def m3(update: Update, context: CallbackContext):
     global wait
     wait = 15
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
     remind()
+
+def m4(update: Update, context: CallbackContext):
+    global wait
+    wait = 30
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
+    remind()
+
+def m5(update: Update, context: CallbackContext):
+    global wait
+    wait = 45
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
+    remind()
+
+def m6(update: Update, context: CallbackContext):
+    global wait
+    wait = 60
+    print("TEST 1H")
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text='Ok c\'est fait !')
+    remind()
+
 
 def remind():
     import time
     global text
     text = str(reminder_input)
+    print(f'Le message de remind est : {text}')
     local_time = wait * 60
     time.sleep(local_time)
     message = ('https://api.telegram.org/bot'+ token + '/sendMessage?chat_id=' + chat_id_remind + '&text=' + text)
@@ -145,14 +186,6 @@ def telegram_link(update: Update, context: CallbackContext):
     update.message.reply_text("t.me/Mehliug_bot")
 
 
-def first_menu(update,context):
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(
-                            text='Ok c\'est fait !')
-    m1()
-
-
 #Trigger des fonctions
 
 updater.dispatcher.add_handler(CommandHandler('start', start))
@@ -166,7 +199,12 @@ updater.dispatcher.add_handler(CommandHandler('search', moviesearch))
 updater.dispatcher.add_handler(CommandHandler('qrcode', qrcode))
 
 updater.dispatcher.add_handler(CommandHandler('r', main_menu))
-updater.dispatcher.add_handler(CallbackQueryHandler(first_menu, pattern='m1'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m1, pattern='m1'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m2, pattern='m2'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m3, pattern='m3'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m4, pattern='m4'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m5, pattern='m5'))
+updater.dispatcher.add_handler(CallbackQueryHandler(m6, pattern='m6'))
 
 updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
 
