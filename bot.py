@@ -27,8 +27,8 @@ import requests
 import re   
 
 #Telegram token
-updater = Updater("5861522005:AAGVYNFK_t7gZGaVz9XRhNpB_oVh1Zfe6Bk",use_context=True)
-token = str("5861522005:AAGVYNFK_t7gZGaVz9XRhNpB_oVh1Zfe6Bk")
+updater = Updater("5909021258:AAHdZXGkJQjOlSE3T9g2oyvZXIDvEW78GhU",use_context=True)
+token = str("5909021258:AAHdZXGkJQjOlSE3T9g2oyvZXIDvEW78GhU")
 
 
 #def des fonctions du bot
