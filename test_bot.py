@@ -20,7 +20,6 @@ from telegram.ext import CommandHandler, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext.filters import Filters
 from bs4 import BeautifulSoup
-import requests
 import re   
 
 #Telegram token
