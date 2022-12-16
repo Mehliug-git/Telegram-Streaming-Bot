@@ -90,8 +90,10 @@ def moviesearch(update: Update, context: CallbackContext):#STREAMING function
 #reminder app
 
 def main_menu(update,context):
-    global reminder_input
     reminder_input = update.message.text.replace('/r', '')#User input - /r
+    file = open("text.txt", "w")
+    file.write(reminder_input)
+    file.close()
 
     update.message.reply_text(main_menu_message(),
                               reply_markup=main_menu_keyboard())
@@ -116,10 +118,12 @@ def main_menu_message():
 def m1(update: Update, context: CallbackContext):
     global wait
     wait = 5
+    wait_write()
     query = update.callback_query
     query.answer()
+    print(chat_id_remind)
     query.edit_message_text(text='Ok c\'est fait !')
-    remind()
+    exec(open("reminder.py").read())
 
 def m2(update: Update, context: CallbackContext):
     global wait
@@ -127,7 +131,6 @@ def m2(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
     query.edit_message_text(text='Ok c\'est fait !')
-    remind()
 
 def m3(update: Update, context: CallbackContext):
     global wait
@@ -135,7 +138,6 @@ def m3(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
     query.edit_message_text(text='Ok c\'est fait !')
-    remind()
 
 def m4(update: Update, context: CallbackContext):
     global wait
@@ -143,7 +145,6 @@ def m4(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
     query.edit_message_text(text='Ok c\'est fait !')
-    remind()
 
 def m5(update: Update, context: CallbackContext):
     global wait
@@ -151,7 +152,6 @@ def m5(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
     query.edit_message_text(text='Ok c\'est fait !')
-    remind()
 
 def m6(update: Update, context: CallbackContext):
     global wait
@@ -160,18 +160,13 @@ def m6(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
     query.edit_message_text(text='Ok c\'est fait !')
-    remind()
 
 
-def remind():
-    import time
-    global text
-    text = str(reminder_input)
-    print(f'Le message de remind est : {text}')
-    local_time = wait * 60
-    time.sleep(local_time)
-    message = ('https://api.telegram.org/bot'+ token + '/sendMessage?chat_id=' + chat_id_remind + '&text=' + text)
-    requests.post(message)
+def wait_write():
+    file = open("wait.txt", "w")
+    file.write(str(wait))
+    file.close()
+
 #Fin reminder app
 
 
@@ -180,7 +175,7 @@ def help(update: Update, context: CallbackContext):
     update.message.reply_text("/link : Permet d'avoir le lien du bot. \n\n/qrcode [Ce que tu veux] : Pour faire un QRCode sur ce que tu veux. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\nNOTE : Stp évite de mettre des mots de liaisons de type (et, le, du...) car ca peux te donner des résultats non attendu.\n\n/r [Ce que tu veux qu'il te rapelle]")
 
 def unknown(update: Update, context: CallbackContext):
-    update.message.reply_text("Mais qu'est ce qu'elle raconte la pute à crack ?!\n Va voir dans /help !")
+    update.message.reply_text("https://giphy.com/gifs/mrw-coffee-wants-tvGOBZKNEX0ac\n\nVa voir dans /help !")
 
 
 def telegram_link(update: Update, context: CallbackContext):
