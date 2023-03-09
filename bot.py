@@ -4,15 +4,15 @@ AIDE URL SOURCE : https://topsitestreaming.info/
 
 install pip :
 pip install python-telegram-bot
+pip install make-response
 
 TODO: 
 
 -Dire le nb de site OK dans la liste 
 -Faire un filtre du user_input pour enelever les mots de liaisons et les accents
--Changer le msg d'erreur par un GIF de mec qui cherche (tu vois de quoi je parle chakal)
+-Ajouter la recherche de jeux / Logiciel crack
 
 """
-import os
 import requests
 import telegram
 from telegram.ext.updater import Updater
@@ -24,30 +24,84 @@ from telegram.ext import CommandHandler, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext.filters import Filters
 from bs4 import BeautifulSoup
-import requests
-import re   
+import re 
+import os
+import openai
+import subprocess
 
+
+
+
+openai.api_key = "XXX"
 #Telegram token
-updater = Updater("5909021258:AAHdZXGkJQjOlSE3T9g2oyvZXIDvEW78GhU",use_context=True)
-token = str("5909021258:AAHdZXGkJQjOlSE3T9g2oyvZXIDvEW78GhU")
+#updater = Updater("XXX",use_context=True)
+#token = str("XXX")
+
+
+"""test bot token"""
+updater = Updater("XXX",use_context=True)
+token = str("XXX")
 
 
 #def des fonctions du bot
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text("TI-TIM-TIMMY !!")
+def moviesearch(update: Update, context: CallbackContext):#STREAMING function
+  
+        URL = ["https://www.megastream.lol/index.php", "https://www.cpasmieux.run/index.php", "https://wwvv.cpasmieux.one/", "https://www.cpasmieux.win/", "https://wwvv.cpasmieux.one/", "https://www.33seriestreaming.lol/", "https://www.hds-streaming.cam/", "https://www.french-stream.buzz/", "https://www.juststream.lol/","https://www.lebonstream.vin/"  ]
+        film = update.message.text.replace('/search', '')#User input - /search
+      
+        update.message.reply_text(f"Timmy ! Timmy... 🔎")
+        search_lower = film.lower()
+        search = search_lower.replace(' ', '+')#POST Payload convert
+        data = {"do":"search", "subaction":"search", "story": {search}}
+        results = search_lower.split()#fait une liste avec le nom du film si plusieurs mots pour chercher dans les URL
+        
+        API = "https://streaming-availability.p.rapidapi.com/v2/search/title"
 
-def qr():#QR CODE Function
+        search = results
+
+        querystring = {"title":search,"country":"fr","type":"all","output_language":"en"}
+
+        headers = {
+	        "X-RapidAPI-Key": "911a7a1ab1msh47966878f7553b3p1acefdjsn5aa1de606188",
+	        "X-RapidAPI-Host": "streaming-availability.p.rapidapi.com"
+        }
+
+        response = requests.request("GET", API, headers=headers, params=querystring)
+
+        data_rep = response.json()
+        if len(data_rep['result']) > 0:
+            movie_title = data_rep['result'][0]['title']
+            streaming_info = data_rep['result'][0]['streamingInfo']
+            print(movie_title)
+            urls = re.findall('(http\S+)', str(streaming_info))
+            update.message.reply_text(f"SITES LEGAUX : \n{urls}")
+              
+      
+        for i in URL:
+            error_url = i.replace('https://', '')
+            page = requests.post(i, data=data)
+            soup = BeautifulSoup(page.content, 'html.parser').find_all(lambda t: t.name == "a")
+            url_list = [a["href"] for a in soup]#https://stackoverflow.com/questions/65168254/how-to-get-href-link-by-text-in-python
+            
+            for __ in resuls:
+                links_temp = list(filter(lambda x: re.search(__, x), url_list))
+                links = '\n\n'.join(links_temp)#saut de ligne entre chaque éléments
+            update.message.reply_text(f"TIMMY !! : \n{links}\n\n Status de la request :{error_url} {page.status_code}")
+
+ #QR CODE Function                  
+def qr():
     import qrcode
     global qr_img
     qr_img = qrcode.make(link)
     qr_img.save('TEMP.png')
 
-def start(update: Update, context: CallbackContext):
-    update.message.reply_text("Ouaiiiiis !!! des nouveaux amis !")
-
 global qrcode
 def qrcode(update: Update, context: CallbackContext):
     global get_qrcode
     global link
-    link = update.message.text.replace('/qrcode', '')
+    link = update.message.text.replace('/qr', '')
     def get_qrcode():
             global chat_id
             chat_id = str(update.effective_user.id)
@@ -60,152 +114,171 @@ def qrcode(update: Update, context: CallbackContext):
             requests.post(message, files = file)
             os.remove('TEMP.png')
     get_qrcode()
+              
+            
+            
 
-
-
-def moviesearch(update: Update, context: CallbackContext):#STREAMING function
-    URL = ["https://www.megastream.lol/index.php", "https://www.cpasmieux.run/index.php", "https://wwvv.cpasmieux.one/", "https://www.cpasmieux.win/", "https://cpasmieux.ink/", "https://wwvv.cpasmieux.one/", "https://www.33seriestreaming.lol/", "https://www.hds-streaming.cam/", "https://www.french-stream.buzz/", "https://streamingseries.lol/", "https://www.juststream.lol/","https://www.lebonstream.vin/"  ]
-    film = update.message.text.replace('/search', '')#User input - /search
-    update.message.reply_text(f"Attend je vais chercher ça ! 🔎")
-    search_lower = film.lower()
-    search = search_lower.replace(' ', '+')#POST Payload convert
-    data = {"do":"search", "subaction":"search", "story": {search}}
-
-    result = search_lower.split()#fait une liste avec le nom du film si plusieurs mots pour chercher dans les URL
-
-    for i in URL:
-        error_url = i.replace('https://', '')
-        page = requests.post(i, data=data)
-        soup = BeautifulSoup(page.content, 'html.parser').find_all(lambda t: t.name == "a")
-        url_list = [a["href"] for a in soup]#https://stackoverflow.com/questions/65168254/how-to-get-href-link-by-text-in-python
-        for __ in result:
-            links_temp = list(filter(lambda x: re.search(__, x), url_list))
-            links = '\n\n'.join(links_temp)#saut de ligne entre chaque éléments
-
-        #print(f'LA PTN DE LIST DURL DE SES MORTS :\n\n\n {links}')
-        update.message.reply_text(f"Tiens c'est cadeau ! : \n{links}\n\n Status de la request :{error_url} {page.status_code}")
-        #print(f'SITE : {page.url} \n {page}')
+def generate_code(update: Update, context: CallbackContext):
+          q = update.message.text.replace('/g', '')
+          response = openai.Completion.create(
+            model="code-davinci-002",
+            prompt=q,
+            max_tokens=4000,
+            temperature=0.7
+          )
+          code = response['choices'][0]['text']
+          update.message.reply_text(code)
+          
+          
+def gpt(update: Update, context: CallbackContext):
+          q = update.message.text.replace('/g', '')
+          response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=q,
+            max_tokens=3800,
+            temperature=0.9
+          )
+          code = response['choices'][0]['text']
+          update.message.reply_text(code)
+          
+          
+def DALLE(update: Update, context: CallbackContext):
+  chat_id = str(update.effective_user.id)
+  update.message.reply_text("Dall-E dessine... (5mins Max)")
+  prompt = update.message.text.replace('/img', '')
+  response = openai.Image.create(
+  prompt=prompt,
+  n=1,
+  size="1024x1024"
+)
+  image_url = response['data'][0]['url']
+  update.message.reply_text(image_url)
+    
+  #./nikto/program/nikto.pl -host {prompt} -Tuning 1 2 3 4 5 7 8 9 0  
+def nikto(update: Update, context: CallbackContext):
+  #GIF
+  chat_id = str(update.effective_user.id)
+  msg = "https://i.giphy.com/YQitE4YNQNahy.gif"
+  message = ('https://api.telegram.org/bot'+ token + '/sendVideo?chat_id=' + chat_id + '&video=' + msg)
+  requests.post(message)
+  
+  site = update.message.text.replace('/nikto', '')
+  prompt = str(site)
+  update.message.reply_text("Scan en cours... (15mins Max)")
+  p = subprocess.Popen(f'./nikto/program/nikto.pl -host {prompt} -Tuning 1 2 3 4 5 7 8 9 0', stdout=subprocess.PIPE, shell=True)
+  output, error = p.communicate()
+  
+  
+  if error:
+    update.message.reply_text(f'Erreur : {error.decode()}')
+  else:
+     # Divise l'output en plusieurs parties
+    parts = output.decode().split('\n')
+    
+    # Envoie chaque partie de l'output au chat
+    for part in parts:
+      chat_id = str(update.effective_user.id)
+      update.message.bot.send_message(
+        chat_id = chat_id,
+        text=part,
+        disable_web_page_preview=True,
+        parse_mode='HTML'
+      )    
+    
+   
+  
+def games(update: Update, context: CallbackContext):#GAMES function
+        URL = ["https://crohasit.net/", "https://gogunlocked.com/"]
+        jeux = update.message.text.replace('/search', '')#User input - /search
+      
+        update.message.reply_text(f"Timmy ! Timmy... 🔎")
+        update.message.reply_text(f"En cours de dev...")
+        search_lower = jeux.lower()
+        search = search_lower.replace(' ', '+')#POST Payload convert
         
+        data = f"?/s={search}"
+        result = search_lower.split()#fait une liste avec le nom du jeux si plusieurs mots pour chercher dans les URL
+        
+        for i in URL:
+            error_url = i.replace('https://', '')
+            page = requests.post(i + data)
+            soup = BeautifulSoup(page.content, 'html.parser').find_all(lambda t: t.name == "a")
+            url_list = [a["href"] for a in soup]#https://stackoverflow.com/questions/65168254/how-to-get-href-link-by-text-in-python
+            
+            for __ in result:
+                links_temp = list(filter(lambda x: re.search(__, x), url_list))
+                links = '\n\n'.join(links_temp)#saut de ligne entre chaque éléments
+            update.message.reply_text(f"TIMMY !! : \n{links}\n\n Status de la request :{error_url} {page.status_code}")
 
-#reminder app
-
-def main_menu(update,context):
-    reminder_input = update.message.text.replace('/r', '')#User input - /r
-    file = open("text.txt", "w")
-    file.write(reminder_input)
-    file.close()
-
-    update.message.reply_text(main_menu_message(),
-                              reply_markup=main_menu_keyboard())
-    global chat_id_remind
-    chat_id_remind = str(update.effective_user.id)
-
-#def du clavier
-def main_menu_keyboard():
-  keyboard = [[InlineKeyboardButton('5 mins', callback_data='m1')],
-              [InlineKeyboardButton('10 mins', callback_data='m2')],
-              [InlineKeyboardButton('15 mins', callback_data='m3')],
-              [InlineKeyboardButton('30 mins', callback_data='m4')],
-              [InlineKeyboardButton('45 mins', callback_data='m5')],
-              [InlineKeyboardButton('1H', callback_data='m6')]]
-  return InlineKeyboardMarkup(keyboard)
-
-#message du menu
-def main_menu_message():
-  return 'Dans combien de temps ? :'
-
-
-def m1(update: Update, context: CallbackContext):
-    global wait
-    wait = 5
-    wait_write()
-    query = update.callback_query
-    query.answer()
-    print(chat_id_remind)
-    query.edit_message_text(text='Ok c\'est fait !')
-    exec(open("reminder.py").read())
-
-def m2(update: Update, context: CallbackContext):
-    global wait
-    wait = 10
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(text='Ok c\'est fait !')
-
-def m3(update: Update, context: CallbackContext):
-    global wait
-    wait = 15
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(text='Ok c\'est fait !')
-
-def m4(update: Update, context: CallbackContext):
-    global wait
-    wait = 30
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(text='Ok c\'est fait !')
-
-def m5(update: Update, context: CallbackContext):
-    global wait
-    wait = 45
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(text='Ok c\'est fait !')
-
-def m6(update: Update, context: CallbackContext):
-    global wait
-    wait = 60
-    print("TEST 1H")
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(text='Ok c\'est fait !')
-
-
-def wait_write():
-    file = open("wait.txt", "w")
-    file.write(str(wait))
-    file.close()
-
-#Fin reminder app
-
-
+            
+def console(update: Update, context: CallbackContext):
+  cmd = update.message.text.replace('/oulah', '')
+  prompt = str(cmd)
+  p = subprocess.Popen(f'{prompt}', stdout=subprocess.PIPE, shell=True)
+  output, error = p.communicate()
+  
+  if error:
+    update.message.reply_text(f'Erreur : {error.decode()}')
+  else:
+     # Divise l'output en plusieurs parties
+    parts = output.decode().split('\n')
+    
+    # Envoie chaque partie de l'output au chat
+    for part in parts:
+      chat_id = str(update.effective_user.id)
+      update.message.bot.send_message(
+        chat_id = chat_id,
+        text=part,
+        disable_web_page_preview=True,
+        parse_mode='HTML'
+      )    
+  
+  
 
 def help(update: Update, context: CallbackContext):
-    update.message.reply_text("/link : Permet d'avoir le lien du bot. \n\n/qrcode [Ce que tu veux] : Pour faire un QRCode sur ce que tu veux. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\nNOTE : Stp évite de mettre des mots de liaisons de type (et, le, du...) car ca peux te donner des résultats non attendu.\n\n/r [Ce que tu veux qu'il te rapelle]")
-
+    update.message.reply_text("/link : Permet d'avoir le lien du bot. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\n\n/g [Ce que tu veux] Pour parler au chat GPT3 ! (Modèle pour le code)\nNe met pas de /g pour parler avec GPT3 texte !\n\n/qr [Mot ou URL] Permet de convertir en QRCODE tout ce que tu lui donne.\n\n/img [Le prompt que tu veux] Pour faire une image via Dall-E\n\n/crack [Nom du jeux] Pour chercher des jeux cracké")
 def unknown(update: Update, context: CallbackContext):
-    update.message.reply_text("https://giphy.com/gifs/mrw-coffee-wants-tvGOBZKNEX0ac\n\nVa voir dans /help !")
-
-
+    chat_id = str(update.effective_user.id)
+    msg = "https://i.giphy.com/3o7aTskHEUdgCQAXde.gif"
+    message = ('https://api.telegram.org/bot'+ token + '/sendVideo?chat_id=' + chat_id + '&video=' + msg)
+    requests.post(message)
+    update.message.reply_text("Timmy ? \n\n/help !")
+                              
+                              
+def secret_help(update: Update, context: CallbackContext):
+    chat_id = str(update.effective_user.id)
+    msg = "https://i.giphy.com/B4dt6rXq6nABilHTYM.gif"
+    message = ('https://api.telegram.org/bot'+ token + '/sendVideo?chat_id=' + chat_id + '&video=' + msg)
+    requests.post(message)
+    update.message.reply_text("U2kgdHUgdHJvdXZlIMOnYSBwYXIgaGF6YXJkIEdHICEgc2lub24gdnJhaW1lbnQgZmFpdCBnYWZmZSDDoCB0b3V0IMOnYSBjJ2VzdCBkYW5nZXJldXguCgovbmlrdG8gW1VSTCBzaXRlIGVuIEhUVFBdIFBvdXIgbGFuY2VyIHVuIHNjYW4gYXZlYyBOaWt0byBzdXIgdW4gc2l0ZSBXZWIuCgovb3VsYWggW1NIRUxMIGNvbW1hbmRdIFBvdXIgbGFuY2VyIGRlcyBjb21tYW5kZXMgc2hlbGw=")
+  
+  
+    
 def telegram_link(update: Update, context: CallbackContext):
     update.message.reply_text("t.me/Mehliug_bot")
+def timmy(update: Update, context: CallbackContext):
+    print("TIMMY !!!!\n\n")
+    print("TIMMY !!!!\n\n")
+    print("TIMMY !!!!\n\n")
 
 
 #Trigger des fonctions
-
 updater.dispatcher.add_handler(CommandHandler('start', start))
-
 updater.dispatcher.add_handler(CommandHandler('help', help))
+                              
+updater.dispatcher.add_handler(CommandHandler('H4X0R', secret_help))
+updater.dispatcher.add_handler(CommandHandler('nikto', nikto))
+updater.dispatcher.add_handler(CommandHandler('oulah', console))
 
 updater.dispatcher.add_handler(CommandHandler('link', telegram_link))
-
 updater.dispatcher.add_handler(CommandHandler('search', moviesearch))
-
-updater.dispatcher.add_handler(CommandHandler('qrcode', qrcode))
-
-updater.dispatcher.add_handler(CommandHandler('r', main_menu))
-updater.dispatcher.add_handler(CallbackQueryHandler(m1, pattern='m1'))
-updater.dispatcher.add_handler(CallbackQueryHandler(m2, pattern='m2'))
-updater.dispatcher.add_handler(CallbackQueryHandler(m3, pattern='m3'))
-updater.dispatcher.add_handler(CallbackQueryHandler(m4, pattern='m4'))
-updater.dispatcher.add_handler(CallbackQueryHandler(m5, pattern='m5'))
-updater.dispatcher.add_handler(CallbackQueryHandler(m6, pattern='m6'))
+updater.dispatcher.add_handler(CommandHandler('crack', games))
+updater.dispatcher.add_handler(CommandHandler('timmy', timmy))
+updater.dispatcher.add_handler(CommandHandler('img', DALLE))
+updater.dispatcher.add_handler(CommandHandler('g', generate_code))
+updater.dispatcher.add_handler(CommandHandler('qr', qrcode))
 
 updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-
-updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown))   
-
-
+updater.dispatcher.add_handler(MessageHandler(Filters.text, gpt))   
 #Run the bot
 updater.start_polling()
