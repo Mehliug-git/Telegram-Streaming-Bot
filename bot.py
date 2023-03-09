@@ -1,18 +1,3 @@
-"""
-SOURCE : https://www.geeksforgeeks.org/create-a-telegram-bot-using-python/
-AIDE URL SOURCE : https://topsitestreaming.info/
-
-install pip :
-pip install python-telegram-bot
-pip install make-response
-
-TODO: 
-
--Dire le nb de site OK dans la liste 
--Faire un filtre du user_input pour enelever les mots de liaisons et les accents
--Ajouter la recherche de jeux / Logiciel crack
-
-"""
 import requests
 import telegram
 from telegram.ext.updater import Updater
