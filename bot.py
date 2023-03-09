@@ -49,7 +49,7 @@ def moviesearch(update: Update, context: CallbackContext):#STREAMING function
         querystring = {"title":search,"country":"fr","type":"all","output_language":"en"}
 
         headers = {
-	        "X-RapidAPI-Key": "911a7a1ab1msh47966878f7553b3p1acefdjsn5aa1de606188",
+	        "X-RapidAPI-Key": "XXX",
 	        "X-RapidAPI-Host": "streaming-availability.p.rapidapi.com"
         }
 
