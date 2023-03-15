@@ -1,13 +1,22 @@
+"""
+SOURCE : https://www.geeksforgeeks.org/create-a-telegram-bot-using-python/
+AIDE URL SOURCE : https://topsitestreaming.info/
+
+install pip :
+pip install python-telegram-bot
+pip install make-response
+
+TODO: 
+
+-Dire le nb de site OK dans la liste 
+-Faire un filtre du user_input pour enelever les mots de liaisons et les accents
+-Ajouter la recherche de jeux / Logiciel crack
+
+"""
 import requests
 import telegram
-from telegram.ext.updater import Updater
+from telegram.ext import Updater, CallbackContext, CommandHandler, MessageHandler, Filters
 from telegram.update import Update
-from telegram.ext.callbackcontext import CallbackContext
-from telegram.ext.commandhandler import CommandHandler
-from telegram.ext.messagehandler import MessageHandler
-from telegram.ext import CommandHandler, CallbackQueryHandler
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext.filters import Filters
 from bs4 import BeautifulSoup
 import re 
 import os
@@ -17,13 +26,9 @@ import subprocess
 
 
 
+
 openai.api_key = "XXX"
 #Telegram token
-#updater = Updater("XXX",use_context=True)
-#token = str("XXX")
-
-
-"""test bot token"""
 updater = Updater("XXX",use_context=True)
 token = str("XXX")
 
@@ -32,49 +37,53 @@ token = str("XXX")
 def start(update: Update, context: CallbackContext):
     update.message.reply_text("TI-TIM-TIMMY !!")
 def moviesearch(update: Update, context: CallbackContext):#STREAMING function
-  
+#USER INPUT      
         URL = ["https://www.megastream.lol/index.php", "https://www.cpasmieux.run/index.php", "https://wwvv.cpasmieux.one/", "https://www.cpasmieux.win/", "https://wwvv.cpasmieux.one/", "https://www.33seriestreaming.lol/", "https://www.hds-streaming.cam/", "https://www.french-stream.buzz/", "https://www.juststream.lol/","https://www.lebonstream.vin/"  ]
-        film = update.message.text.replace('/search', '')#User input - /search
-      
+        film = update.message.text.replace('/search ', '')#User input - "/search"
         update.message.reply_text(f"Timmy ! Timmy... 🔎")
         search_lower = film.lower()
         search = search_lower.replace(' ', '+')#POST Payload convert
-        data = {"do":"search", "subaction":"search", "story": {search}}
-        results = search_lower.split()#fait une liste avec le nom du film si plusieurs mots pour chercher dans les URL
         
+#LEGAL SEARCH
         API = "https://streaming-availability.p.rapidapi.com/v2/search/title"
-
-        search = results
-
         querystring = {"title":search,"country":"fr","type":"all","output_language":"en"}
-
         headers = {
 	        "X-RapidAPI-Key": "XXX",
 	        "X-RapidAPI-Host": "streaming-availability.p.rapidapi.com"
         }
 
-        response = requests.request("GET", API, headers=headers, params=querystring)
-
-        data_rep = response.json()
+      
+        request = requests.request("GET", API, headers=headers, params=querystring)
+        data_rep = request.json()
         if len(data_rep['result']) > 0:
             movie_title = data_rep['result'][0]['title']
             streaming_info = data_rep['result'][0]['streamingInfo']
-            print(movie_title)
-            urls = re.findall('(http\S+)', str(streaming_info))
-            update.message.reply_text(f"SITES LEGAUX : \n{urls}")
-              
-      
+            
+            urls = re.findall('(http\S+)', str(streaming_info))#ICI FAIRE UNE REGEX QUI PREND PRIME VIDEO NETFLIX ETC
+            urls_final = '\n\n'.join(urls)
+            update.message.reply_text(f"SITES LEGAUX pour {movie_title} : \n\n{urls_final}")   
+  
+    
+    
+#NORMAL SEARCH 
+        data = {"do":"search", "subaction":"search", "story": {search}}
+        
         for i in URL:
             error_url = i.replace('https://', '')
             page = requests.post(i, data=data)
-            soup = BeautifulSoup(page.content, 'html.parser').find_all(lambda t: t.name == "a")
-            url_list = [a["href"] for a in soup]#https://stackoverflow.com/questions/65168254/how-to-get-href-link-by-text-in-python
-            
-            for __ in resuls:
+            soup = BeautifulSoup(page.content, 'html.parser')
+            url_list = re.findall('(http\S+)', str(soup))
+            print(url_list)
+                  
+            #pour rechercher le nom du film dans la liste d'url  
+            for __ in search.split():
                 links_temp = list(filter(lambda x: re.search(__, x), url_list))
                 links = '\n\n'.join(links_temp)#saut de ligne entre chaque éléments
-            update.message.reply_text(f"TIMMY !! : \n{links}\n\n Status de la request :{error_url} {page.status_code}")
+                links_final = links.replace('">','')
+            update.message.reply_text(f"TIMMY !! : \n{links_final}\n\n Status de la request :{error_url} {page.status_code}")
+            
 
+            
  #QR CODE Function                  
 def qr():
     import qrcode
