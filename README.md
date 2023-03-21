@@ -1,6 +1,6 @@
 # Telegram-bot-de-foufou
 
-Telegram Bot for search streaming film and series ! and do other things !!
+Telegram Bot for search streaming film and series ! (On free streaming sites & paid streaming sites) and do other things !!
 
 Link for testing : https://t.me/Mehliug_bot
 
