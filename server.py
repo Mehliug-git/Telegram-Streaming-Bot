@@ -1,30 +1,20 @@
-import flask, telebot
-from bot import bot
+from flask import Flask, render_template
+import subprocess
 
-app = flask.Flask(__name__)
-WEBHOOK_URL_PATH = "/{}".format(bot.token)
-index = open('static/index.html').read()
+app = Flask(__name__)
+ 
+subprocess.Popen(['python3' , 'bot.py'])
 
+@app.route("/")
+def hello_world():
 
-# Process index page
-@app.route('/')
-def root():
-    print('index!')
-    return index # 'xd' # flask.send_from_directory('/static', 'index.html')
+  return render_template("index.php", title="Hello")
 
 
-# Process webhook calls
-@app.route(WEBHOOK_URL_PATH, methods=['POST', 'GET'])
-def webhook():
-    print(flask.request)
-    if flask.request.headers.get('content-type') == 'application/json':
-        json_string = flask.request.get_data().decode('utf-8')
-        update = telebot.types.Update.de_json(json_string)
-        bot.process_new_updates([update])
-        return ''
-    else:
-        flask.abort(403)
+app.run()
+"""
 
 if __name__ == "__main__":
-  
-  app.run(debug=True)
+    app.run()
+
+"""

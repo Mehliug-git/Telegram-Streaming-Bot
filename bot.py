@@ -1,3 +1,18 @@
+"""
+SOURCE : https://www.geeksforgeeks.org/create-a-telegram-bot-using-python/
+AIDE URL SOURCE : https://topsitestreaming.info/
+
+install pip :
+pip install python-telegram-bot
+pip install make-response
+
+TODO: 
+
+-Dire le nb de site OK dans la liste 
+-Faire un filtre du user_input pour enelever les mots de liaisons et les accents
+-Ajouter la recherche de jeux / Logiciel crack
+
+"""
 import requests
 import telegram
 from telegram.ext import Updater, CallbackContext, CommandHandler, MessageHandler, Filters
@@ -26,7 +41,7 @@ def start(update: Update, context: CallbackContext):
         else:
             update.message.reply_text(f"TI-TIM-TIMMY !!\n\n{chat_id}")
 
-
+"""
 def msg_all(update: Update, context: CallbackContext):  
   chat_id_list = open("chat_id.txt", "r+")
   
@@ -34,14 +49,12 @@ def msg_all(update: Update, context: CallbackContext):
     msg = update.message.text.replace('/MsG__AlL', '')
     message = ('https://api.telegram.org/bot'+ token + '/sendMessage?chat_id=' + _id + '&text=' + msg)
     requests.post(message)
-  
+"""  
             
 
-"""
 #def des fonctions du bot
-def start(update: Update, context: CallbackContext):
-    
-"""
+   
+
 def moviesearch(update: Update, context: CallbackContext):#STREAMING function
 #USER INPUT      
         URL = ["https://www.megastream.lol/index.php", "https://www.cpasmieux.run/index.php", "https://wwvv.cpasmieux.one/", "https://www.cpasmieux.win/", "https://wwvv.cpasmieux.one/", "https://www.33seriestreaming.lol/", "https://www.hds-streaming.cam/", "https://www.french-stream.buzz/", "https://www.juststream.lol/","https://www.lebonstream.vin/"  ]
@@ -256,16 +269,13 @@ def secret_help(update: Update, context: CallbackContext):
     
 def telegram_link(update: Update, context: CallbackContext):
     update.message.reply_text("t.me/Mehliug_bot")
-def timmy(update: Update, context: CallbackContext):
-    print("TIMMY !!!!\n\n")
-    print("TIMMY !!!!\n\n")
-    print("TIMMY !!!!\n\n")
+
 
 
 #Trigger des fonctions
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(CommandHandler('help', help))
-updater.dispatcher.add_handler(CommandHandler('MsG__AlL', msg_all))  
+#updater.dispatcher.add_handler(CommandHandler('MsG__AlL', msg_all))  
 
 updater.dispatcher.add_handler(CommandHandler('H4X0R', secret_help))
 updater.dispatcher.add_handler(CommandHandler('nikto', nikto))
@@ -274,7 +284,7 @@ updater.dispatcher.add_handler(CommandHandler('oulah', console))
 updater.dispatcher.add_handler(CommandHandler('link', telegram_link))
 updater.dispatcher.add_handler(CommandHandler('search', moviesearch))
 updater.dispatcher.add_handler(CommandHandler('crack', games))
-updater.dispatcher.add_handler(CommandHandler('timmy', timmy))
+
 updater.dispatcher.add_handler(CommandHandler('img', DALLE))
 updater.dispatcher.add_handler(CommandHandler('g', generate_code))
 updater.dispatcher.add_handler(CommandHandler('qr', qrcode))
