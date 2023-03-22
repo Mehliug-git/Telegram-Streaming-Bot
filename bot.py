@@ -1,18 +1,3 @@
-"""
-SOURCE : https://www.geeksforgeeks.org/create-a-telegram-bot-using-python/
-AIDE URL SOURCE : https://topsitestreaming.info/
-
-install pip :
-pip install python-telegram-bot
-pip install make-response
-
-TODO: 
-
--Dire le nb de site OK dans la liste 
--Faire un filtre du user_input pour enelever les mots de liaisons et les accents
--Ajouter la recherche de jeux / Logiciel crack
-
-"""
 import requests
 import telegram
 from telegram.ext import Updater, CallbackContext, CommandHandler, MessageHandler, Filters
@@ -24,22 +9,44 @@ import openai
 import subprocess
 
 
-
-
-
-openai.api_key = "XXX"
+openai.api_key = os.getenv('OPENAI_TOKEN')
 #Telegram token
-updater = Updater("XXX",use_context=True)
-token = str("XXX")
+token = os.getenv('TELEGRAM_TOKEN')
+updater = Updater(token,use_context=True)
+rapidapi_key = os.getenv('RAPIDAPI_KEY')
 
 
+
+def start(update: Update, context: CallbackContext):
+    chat_id = str(update.effective_user.id)
+    with open("chat_id.txt", "r+") as f:
+        if chat_id not in f.read():
+            f.write(f"{chat_id}\n")
+            update.message.reply_text("TI-TIM-TIMMY !!")
+        else:
+            update.message.reply_text(f"TI-TIM-TIMMY !!\n\n{chat_id}")
+
+
+def msg_all(update: Update, context: CallbackContext):  
+  chat_id_list = open("chat_id.txt", "r+")
+  
+  for _id in chat_id_list:
+    msg = update.message.text.replace('/MsG__AlL', '')
+    message = ('https://api.telegram.org/bot'+ token + '/sendMessage?chat_id=' + _id + '&text=' + msg)
+    requests.post(message)
+  
+            
+
+"""
 #def des fonctions du bot
 def start(update: Update, context: CallbackContext):
-    update.message.reply_text("TI-TIM-TIMMY !!")
+    
+"""
 def moviesearch(update: Update, context: CallbackContext):#STREAMING function
 #USER INPUT      
         URL = ["https://www.megastream.lol/index.php", "https://www.cpasmieux.run/index.php", "https://wwvv.cpasmieux.one/", "https://www.cpasmieux.win/", "https://wwvv.cpasmieux.one/", "https://www.33seriestreaming.lol/", "https://www.hds-streaming.cam/", "https://www.french-stream.buzz/", "https://www.juststream.lol/","https://www.lebonstream.vin/"  ]
-        film = update.message.text.replace('/search ', '')#User input - "/search"
+        film_old = update.message.text.replace('/search ', '')#User input - "/search"
+        film = film_old.replace(' ', '-')
         update.message.reply_text(f"Timmy ! Timmy... 🔎")
         search_lower = film.lower()
         search = search_lower.replace(' ', '+')#POST Payload convert
@@ -48,7 +55,7 @@ def moviesearch(update: Update, context: CallbackContext):#STREAMING function
         API = "https://streaming-availability.p.rapidapi.com/v2/search/title"
         querystring = {"title":search,"country":"fr","type":"all","output_language":"en"}
         headers = {
-	        "X-RapidAPI-Key": "XXX",
+	        "X-RapidAPI-Key": rapidapi_key,
 	        "X-RapidAPI-Host": "streaming-availability.p.rapidapi.com"
         }
 
@@ -125,15 +132,14 @@ def generate_code(update: Update, context: CallbackContext):
           
           
 def gpt(update: Update, context: CallbackContext):
-          q = update.message.text.replace('/g', '')
+          q = update.message.text
           response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=q,
-            max_tokens=3800,
-            temperature=0.9
-          )
-          code = response['choices'][0]['text']
-          update.message.reply_text(code)
+          model="text-davinci-003",
+          prompt=q,
+          temperature=0
+        )
+          rep = response['choices'][0]['text']
+          update.message.reply_text(rep)
           
           
 def DALLE(update: Update, context: CallbackContext):
@@ -244,7 +250,7 @@ def secret_help(update: Update, context: CallbackContext):
     msg = "https://i.giphy.com/B4dt6rXq6nABilHTYM.gif"
     message = ('https://api.telegram.org/bot'+ token + '/sendVideo?chat_id=' + chat_id + '&video=' + msg)
     requests.post(message)
-    update.message.reply_text("U2kgdHUgdHJvdXZlIMOnYSBwYXIgaGF6YXJkIEdHICEgc2lub24gdnJhaW1lbnQgZmFpdCBnYWZmZSDDoCB0b3V0IMOnYSBjJ2VzdCBkYW5nZXJldXguCgovbmlrdG8gW1VSTCBzaXRlIGVuIEhUVFBdIFBvdXIgbGFuY2VyIHVuIHNjYW4gYXZlYyBOaWt0byBzdXIgdW4gc2l0ZSBXZWIuCgovb3VsYWggW1NIRUxMIGNvbW1hbmRdIFBvdXIgbGFuY2VyIGRlcyBjb21tYW5kZXMgc2hlbGw=")
+    update.message.reply_text("U2kgdHUgdHJvdXZlIMOnYSBwYXIgaGF6YXJkIEdHICEgc2lub24gdnJhaW1lbnQgZmFpdCBnYWZmZSDDoCB0b3V0IMOnYSBjJ2VzdCBkYW5nZXJldXguCgovbmlrdG8gW1VSTCBzaXRlIGVuIEhUVFBdIFBvdXIgbGFuY2VyIHVuIHNjYW4gYXZlYyBOaWt0byBzdXIgdW4gc2l0ZSBXZWIuCgovb3VsYWggW1NIRUxMIGNvbW1hbmRdIFBvdXIgbGFuY2VyIGRlcyBjb21tYW5kZXMgc2hlbGw=\n\n/MsG__AlL")
   
   
     
@@ -259,7 +265,8 @@ def timmy(update: Update, context: CallbackContext):
 #Trigger des fonctions
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(CommandHandler('help', help))
-                              
+updater.dispatcher.add_handler(CommandHandler('MsG__AlL', msg_all))  
+
 updater.dispatcher.add_handler(CommandHandler('H4X0R', secret_help))
 updater.dispatcher.add_handler(CommandHandler('nikto', nikto))
 updater.dispatcher.add_handler(CommandHandler('oulah', console))
