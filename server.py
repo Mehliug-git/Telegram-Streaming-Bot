@@ -1,17 +1,26 @@
 from flask import Flask, render_template
+from flask_scss import Scss
 import subprocess
+import time
+
 
 app = Flask(__name__)
- 
-subprocess.Popen(['python3' , 'bot.py'])
+scss = Scss(app)#Initialisation du SCSS
+
+bot_process = subprocess.Popen(['python3' , 'bot.py'])
+
+
 
 @app.route("/")
-def hello_world():
-
-  return render_template("index.php", title="Hello")
-
+def page_web_de_mort():
+    bot_process
+    return render_template('index.php'), 200
+    
 
 app.run()
+  
+  
+  
 """
 
 if __name__ == "__main__":

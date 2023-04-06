@@ -1,5 +1,6 @@
 #install nikto for the /nikto command
 Flask
+Flask-SCSS
 Image 
 BeautifulSoup4 
 python-telegram-bot
