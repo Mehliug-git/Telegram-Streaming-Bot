@@ -4,7 +4,7 @@ Telegram Bot for search streaming film and series ! (On free streaming sites & p
 
 Actual features : 
 
-  [+] Free Streaming search (Films / Series) \n
+  [+] Free Streaming search (Films / Series) <br/><br/>
   [+] QR Codes generations
   [+] Cracked Games search
   [+] Nikto scan
