@@ -2,6 +2,14 @@
 
 Telegram Bot for search streaming film and series ! (On free streaming sites & paid streaming sites) and do other things !!
 
+Actual features : 
+
+  [+] Free Streaming search (Films / Series)
+  [+] QR Codes generations
+  [+] Cracked Games search
+  [+] Nikto scan
+  [+] Make Shell commands (Send me a message for activate this)
+
 Link for testing : https://t.me/Mehliug_bot
 
 
