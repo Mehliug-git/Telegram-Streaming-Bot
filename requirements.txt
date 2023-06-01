@@ -1,5 +1,8 @@
-#Flask
-#PyRoxy
-#python-telegram-bot==13.15
-#requests
-#subprocess
+Flask
+Flask-SCSS
+Image 
+BeautifulSoup4 
+python-telegram-bot
+requests
+openai
+subprocess
