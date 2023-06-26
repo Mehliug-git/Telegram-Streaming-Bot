@@ -27,10 +27,12 @@ token = os.getenv('TELEGRAM_TOKEN')
 updater = Updater(token,use_context=True)
 rapidapi_key = os.getenv('RAPIDAPI_KEY')
 
+
+
 def start(update: Update, context: CallbackContext):
   update.message.reply_text("TI-TIM-TIMMY !! \n\n Salut ! Fait un /help si t'es perdu !")
 
-
+#permet de log les fail de commandes et les msg sans commandes dans un fichier poukave.txt
 def poukave(update: Update, context: CallbackContext):
   chat_id = str(update.effective_user.id)
   
@@ -45,7 +47,7 @@ def poukave(update: Update, context: CallbackContext):
 
 
 
-        
+#Admin auth for admin ressources        
 def auth(update: Update, context: CallbackContext):
   passwd = update.message.text.replace('/auth ', '')
   if passwd == os.getenv('HEHEHEHA'):
@@ -55,7 +57,7 @@ def auth(update: Update, context: CallbackContext):
   else :
      update.message.reply_text("HAHAHAHAHA nope.")
       
-  
+# Admin ressources  
 '''FONCTIONS AVEC AUTH'''
 
 def console(update: Update, context: CallbackContext):
@@ -119,7 +121,7 @@ def nikto(update: Update, context: CallbackContext):
   else: 
     update.message.reply_text("🚫 ERREUR : T'es pas admin 🚫")
   
-             
+#MSG for All users              
 def msg_all(update: Update, context: CallbackContext):  
   if admin == True:
     chat_id_list = open("chat_id.txt", "r+")
@@ -221,60 +223,6 @@ def qrcode(update: Update, context: CallbackContext):
             os.remove('TEMP.png')
     get_qrcode()
               
-            
-            
-
-def generate_code(update: Update, context: CallbackContext):
-          poukave(update, context)
-          q = update.message.text.replace('/g', '')
-          response = openai.Completion.create(
-            model="code-davinci-003",
-            prompt=q,
-            max_tokens=4000,
-            temperature=0.7
-          )
-          code = response['choices'][0]['text']
-          update.message.reply_text(code)
-          
-          
-def gpt(update: Update, context: CallbackContext):
-  poukave(update, context)
-  q = update.message.text
-  cookie = os.getenv('bing_cookie')
-          
-  url = "https://chatgpt-4-bing-ai-chat-api.p.rapidapi.com/chatgpt-4-bing-ai-chat-api/0.2/send-message/"
-
-  payload = {
-	  "bing_u_cookie": "1ZiOF3lXUPPKkK0NtRzIhkKisG8oysBtM1SDRhMPa5TEu1hUQWsEw14Oo9r1HSZSRWlnoN4rCs-nphaH9fkpOO0HqJCKcT0zhW3mUvJ1v6MOJIaGm7SYtXyI9BU32BC_wdnt7937dDK-mNSDILugj1mbo1LhCjVBPY7SAg_Q3YDfvGNNUXwHu2_OVHTX_HFE5qkl_6RJUnRVYC-bG0RXKQaj8BeDRGOkyplCM8IHStw0",
-	  "question": q
-  }
-  headers = {
-	  "content-type": "application/x-www-form-urlencoded",
-	  "X-RapidAPI-Key": "911a7a1ab1msh47966878f7553b3p1acefdjsn5aa1de606188",
-	  "X-RapidAPI-Host": "chatgpt-4-bing-ai-chat-api.p.rapidapi.com"
-  }
-
-  response = requests.post(url, data=payload, headers=headers)
-  
-  print(response.json())
-  
-  update.message.reply_text("qsd")
-          
-          
-def DALLE(update: Update, context: CallbackContext):
-  poukave(update, context)
-  chat_id = str(update.effective_user.id)
-  update.message.reply_text("Dall-E dessine... (5mins Max)")
-  prompt = update.message.text.replace('/img', '')
-  response = openai.Image.create(
-  prompt=prompt,
-  n=1,
-  size="1024x1024"
-)
-  image_url = response['data'][0]['url']
-  update.message.reply_text(image_url)
-
-
  
   
 def games(update: Update, context: CallbackContext):#GAMES function
@@ -308,7 +256,7 @@ def games(update: Update, context: CallbackContext):#GAMES function
 
 def help(update: Update, context: CallbackContext):
     poukave(update, context)
-    update.message.reply_text("/link : Permet d'avoir le lien du bot. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\n\n/g [Ce que tu veux] Pour parler au chat GPT3 ! (Modèle pour le code)\nNe met pas de /g pour parler avec GPT3 texte !\n\n/qr [Mot ou URL] Permet de convertir en QRCODE tout ce que tu lui donne.\n\n/img [Le prompt que tu veux] Pour faire une image via Dall-E\n\n/crack [Nom du jeux] Pour chercher des jeux cracké")
+    update.message.reply_text("/link : Permet d'avoir le lien du bot. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\n\n/qr [Mot ou URL] Permet de convertir en QRCODE tout ce que tu lui donne.\n\n/crack [Nom du jeux] Pour chercher des jeux cracké")
 
 def unknown(update: Update, context: CallbackContext):
     msg = str(update.message.text)
@@ -353,11 +301,9 @@ updater.dispatcher.add_handler(CommandHandler('link', telegram_link))
 updater.dispatcher.add_handler(CommandHandler('search', moviesearch))
 updater.dispatcher.add_handler(CommandHandler('crack', games))
 
-updater.dispatcher.add_handler(CommandHandler('img', DALLE))
-updater.dispatcher.add_handler(CommandHandler('g', generate_code))
 updater.dispatcher.add_handler(CommandHandler('qr', qrcode))
 
 updater.dispatcher.add_handler(MessageHandler(Filters.command, unknown))
-updater.dispatcher.add_handler(MessageHandler(Filters.text, gpt))   
+updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown))   
 #Run the bot
 updater.start_polling()
