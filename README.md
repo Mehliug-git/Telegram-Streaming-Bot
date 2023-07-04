@@ -1,4 +1,4 @@
-# Telegram-bot-de-foufou
+# Free Streaming Telegram Bot !
 
 Telegram Bot for search streaming film and series ! (On free streaming sites & paid streaming sites) and do other things !!
 
