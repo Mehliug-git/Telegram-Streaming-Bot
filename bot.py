@@ -25,8 +25,9 @@ rapidapi_key = os.getenv('RAPIDAPI_KEY')
 
 def start(update: Update, context: CallbackContext):
   update.message.reply_text("TI-TIM-TIMMY !! \n\n🇺🇸\n Hey ! Make a /help if you are lost !\n\n🇫🇷\nSalut ! Fait un /help si t'es perdu !")
-
-#permet de log les fail de commandes et les msg sans commandes dans un fichier poukave.txt
+  poukave(update, context)
+  
+#Pour stocker les chat_id  
 def poukave(update: Update, context: CallbackContext):
   chat_id = str(update.effective_user.id)
   
@@ -48,8 +49,22 @@ def auth(update: Update, context: CallbackContext):
     global admin
     admin = True
     update.message.reply_text("Wesh l'admin")
+    
+    # Supprimer le MDP du chat
+    update.message.delete()
+    
+    
   else :
-     update.message.reply_text("HAHAHAHAHA nope.")
+    chat_id = str(update.effective_user.id)
+    msg = f"UN CONNARD FAIT DES /auth !!! ID : {chat_id} & sont mdp : {passwd}"
+    
+    update.message.reply_text("HAHAHAHAHA nope.")
+    update.message.bot.send_message(
+          chat_id = os.getenv('ID'),
+          text=msg,
+          disable_web_page_preview=True,
+          parse_mode='HTML'
+        ) 
       
 # Admin ressources  
 '''FONCTIONS AVEC AUTH'''
@@ -70,14 +85,14 @@ def console(update: Update, context: CallbackContext):
       # Envoie chaque partie de l'output au chat
       for part in parts:
         chat_id = str(update.effective_user.id)
-        update.message.bot.send_message(
-          chat_id = chat_id,
-          text=part,
-          disable_web_page_preview=True,
-          parse_mode='HTML'
-        ) 
+        if part:
+          update.message.bot.send_message(
+            chat_id = chat_id,
+            text=part) 
+        else: 
+          #if part empty or just space, nothing append
   else : 
-    update.message.reply_text("🚫 ERROR : Timmy Admin 🚫")
+    update.message.reply_text("🚫 ERROR : Timmy ! Admin 🚫")
 
 
   #./nikto/program/nikto.pl -host {prompt} -Tuning 1 2 3 4 5 7 8 9 0  
@@ -113,7 +128,7 @@ def nikto(update: Update, context: CallbackContext):
           parse_mode='HTML'
         )    
   else: 
-    update.message.reply_text("🚫 ERROR : Timmy Admin !? 🚫")
+    update.message.reply_text("🚫 ERROR : Timmy ! Admin !? 🚫")
   
 #MSG for All users              
 def msg_all(update: Update, context: CallbackContext):  
@@ -125,7 +140,7 @@ def msg_all(update: Update, context: CallbackContext):
       message = ('https://api.telegram.org/bot'+ token + '/sendMessage?chat_id=' + _id + '&text=' + msg)
       requests.post(message)
   else:
-    update.message.reply_text("🚫 ERROR : Timmy Admin !? 🚫")
+    update.message.reply_text("🚫 ERROR : Timmy ! Admin !? 🚫")
 
 #def des fonctions du bot
    
@@ -250,11 +265,13 @@ def help(update: Update, context: CallbackContext):
     poukave(update, context)
     update.message.reply_text("🇫🇷\n/link : Permet d'avoir le lien du bot. \n\n/search [Nom du film / serie] : Pour rechercher un film ou une serie sur des sites pas hyper légaux... mais bon c'est gratuit !\n\n/qr [Mot ou URL] Permet de convertir en QRCODE tout ce que tu lui donne.\n\n/crack [Nom du jeux] Pour chercher des jeux cracké\n\n🇺🇸\n/link: Provides the bot's link.\n\n/search [Movie / series name]: To search for a movie or series on not-so-legal websites... but well, it's free!\n\n/qr [Word or URL]: Converts whatever you give it into a QR code.\n\n/crack [Game name]: To look for cracked games.")
 
+#permet de log les fail de commandes et les msg sans commandes dans un fichier poukave.txt
 def unknown(update: Update, context: CallbackContext):
+    chat_id = str(update.effective_user.id)
     msg = str(update.message.text)
     print(msg)
     with open("poukave.txt", "a+") as f:
-      f.write(f"{msg}\n")  
+      f.write(f"{msg} --> {chat_id}\n")  
   
     poukave(update, context)
     chat_id = str(update.effective_user.id)
