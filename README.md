@@ -1,5 +1,6 @@
 # Free Streaming Telegram Bot !
-
+TIMMY !!!<br/><br/>
+<img src="https://vignette.wikia.nocookie.net/southpark/images/7/74/Pirate_Ship_Timmy.png" width="70" /><br/><br/>
 Telegram Bot for search streaming film and series ! (On free streaming sites & paid streaming sites) and do other things !!
 
 Actual features : 
@@ -23,5 +24,4 @@ For the hosting I choose GLITCH and a bot GET every minutes the webpage to keep 
 
 [FOR EDUCATIONAL PURPOSE ONLY.]
 <br/><br/>
-TIMMY !!!<br/><br/>
-<img src="https://vignette.wikia.nocookie.net/southpark/images/7/74/Pirate_Ship_Timmy.png" width="60" />
+
