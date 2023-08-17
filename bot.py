@@ -1,14 +1,3 @@
-"""
-install pip :
-pip install python-telegram-bot
-pip install make-response
-
-TODO: 
-
--Faire un filtre du user_input pour enelever les accents
--Mettre midjourney pour DALLE (voir si peux pas avoir de clé gratuite )
-
-"""
 import requests
 import telegram
 from telegram import ParseMode
