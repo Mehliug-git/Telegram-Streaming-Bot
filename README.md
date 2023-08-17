@@ -23,4 +23,4 @@ For the hosting I choose GLITCH and a bot GET every minutes the webpage to keep 
 
 [FOR EDUCATIONAL PURPOSE ONLY.]
 <br/><br/>
-![Alt text](https://vignette.wikia.nocookie.net/southpark/images/7/74/Pirate_Ship_Timmy.png "TIMMY !!")
+![Alt text](https://vignette.wikia.nocookie.net/southpark/images/7/74/Pirate_Ship_Timmy.png "TIMMY !!"){ width=60%,height:30px }
