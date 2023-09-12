@@ -16,6 +16,8 @@ Actual features :
 Link for testing : https://t.me/Mehliug_bot
 <br/><br/>
 WebApp link : https://mehliug-bot.glitch.me/
+<br/><br/>
+PLEASE USE /search FOR START THE RESEARCH
 
 # Hosting infos & Disclaimer
 
