@@ -5,4 +5,4 @@ BeautifulSoup4
 python-telegram-bot
 requests
 openai
-subprocess
+#subprocess
