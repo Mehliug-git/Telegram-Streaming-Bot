@@ -5,7 +5,7 @@ FROM vm/ubuntu:18.04
 
 # Install python
 RUN apt-get update && apt-get install python3 && apt-get install python3-pip
-RUN pip3 install -r requirements.txt
+
 
 # Create some files
 #RUN echo '<b>some html</b>' > hello.html
@@ -17,6 +17,7 @@ RUN pip3 install -r requirements.txt
 # This line copies the repository to /root in the runner
 COPY . .
 RUN ls
+RUN pip3 install -r requirements.txt
 
 # Expose the webserver in the staging server as a secure link.
 # Whenever someone clicks the link, we'll load this staging server and forward
